@@ -1,4 +1,4 @@
-module github.com/rzrbld/zabbix-exporter-3000
+module github.com/koscom-cloud/zabbix-exporter-3000
 
 go 1.14
 
@@ -19,6 +19,7 @@ require (
 	github.com/sergi/go-diff v1.1.0 // indirect
 	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
 	github.com/smartystreets/goconvey v1.6.4 // indirect
+	github.com/spf13/viper v1.7.1 // indirect
 	github.com/valyala/fasthttp v1.9.0 // indirect
 	github.com/xeipuuv/gojsonschema v1.2.0 // indirect
 	github.com/yalp/jsonpath v0.0.0-20180802001716-5cc68e5049a0 // indirect

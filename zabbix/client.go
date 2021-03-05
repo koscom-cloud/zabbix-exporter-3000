@@ -4,7 +4,7 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"github.com/cavaliercoder/go-zabbix"
-	cnf "github.com/rzrbld/zabbix-exporter-3000/config"
+	cnf "github.com/koscom-cloud/zabbix-exporter-3000/config"
 	"log"
 	"net/http"
 	"strings"
