@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/kataras/iris/v12"
 
 	prometheusMiddleware "github.com/iris-contrib/middleware/prometheus"
@@ -34,7 +35,7 @@ func main() {
 	m := prometheusMiddleware.New("ze3000", 0.3, 1.2, 5.0)
 	hdl.RecordMetrics()
 	app.Use(m.ServeHTTP)
-	app.Get(cnf.MetricUriPath, iris.FromStd(promhttp.Handler()))
+	app.Get(cnf.Cnf.MetricUriPath, iris.FromStd(promhttp.Handler()))
 
 	app.Get("/liveness", func(ctx iris.Context) {
 		ctx.WriteString("ok")
@@ -48,5 +49,5 @@ func main() {
 		ctx.WriteString("zabbix-exporter-3000")
 	})
 
-	app.Run(iris.Addr(cnf.MainHostPort), iris.WithoutServerError(iris.ErrServerClosed))
+	app.Run(iris.Addr(cnf.Cnf.MainHostPort), iris.WithoutServerError(iris.ErrServerClosed))
 }

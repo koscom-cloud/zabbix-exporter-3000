@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/spf13/viper"
@@ -24,8 +25,8 @@ type Config struct {
 	SourceRefresh    		string `mapstructure:"ZE3000_ZABBIX_REFRESH_DELAY_SEC"`
 	MetricLabels     		string `mapstructure:"ZE3000_ZABBIX_METRIC_LABELS"`
 	Query            		string `mapstructure:"ZE3000_ZABBIX_QUERY"`
-}
 
+}
 var Cnf Config
 
 func loadConfig(path string) (config Config, err error) {
@@ -44,11 +45,13 @@ func loadConfig(path string) (config Config, err error) {
 }
 
 func init(){
+	fmt.Println(Cnf)
 	var err error
-	Cnf, err = loadConfig(".")
+	Cnf, err = loadConfig("./config/")
 	if err != nil {
 		log.Fatal("cannot load config:", err)
 	}
+	fmt.Println(Cnf)
 }
 
 // var (

@@ -2,18 +2,19 @@ package handlers
 
 import (
 	"encoding/json"
-	"github.com/prometheus/client_golang/prometheus"
-	cnf "github.com/koscom-cloud/zabbix-exporter-3000/config"
-	zbx "github.com/koscom-cloud/zabbix-exporter-3000/zabbix"
 	"log"
 	"regexp"
 	"strconv"
 	"strings"
 	"time"
+
+	cnf "github.com/koscom-cloud/zabbix-exporter-3000/config"
+	zbx "github.com/koscom-cloud/zabbix-exporter-3000/zabbix"
+	"github.com/prometheus/client_golang/prometheus"
 )
 
-var sourceRefreshSec, _ = strconv.Atoi(cnf.SourceRefresh)
-var labelsSliceRaw = strings.Split(cnf.MetricLabels, ",")
+var sourceRefreshSec, _ = strconv.Atoi(cnf.Cnf.SourceRefresh)
+var labelsSliceRaw = strings.Split(cnf.Cnf.MetricLabels, ",")
 
 // labels in prom format
 var labelsSlicePrometheus []string
@@ -53,7 +54,7 @@ func uniqueSlice(intSlice []string) []string {
 }
 
 func registerMetric(metric *prometheus.GaugeVec) {
-	if cnf.StrictRegister {
+	if cnf.Cnf.StrictRegister {
 		prometheus.MustRegister(metric)
 	} else {
 		prometheus.Register(metric)
@@ -77,13 +78,13 @@ func buildMetrics() {
 
 	var results = queryZabbix()
 
-	if cnf.MetricNameField != "" {
+	if cnf.Cnf.MetricNameField != "" {
 		for k, result := range results {
-			cleanName := cleanUpName(result[cnf.MetricNameField].(string))
+			cleanName := cleanUpName(result[cnf.Cnf.MetricNameField].(string))
 			rawMetricNames = append(rawMetricNames, cleanName)
-			if result[cnf.MetricHelpField] != nil {
-				if result[cnf.MetricHelpField].(string) != "" {
-					rawMetricDesc = append(rawMetricDesc, result[cnf.MetricHelpField].(string))
+			if result[cnf.Cnf.MetricHelpField] != nil {
+				if result[cnf.Cnf.MetricHelpField].(string) != "" {
+					rawMetricDesc = append(rawMetricDesc, result[cnf.Cnf.MetricHelpField].(string))
 				} else {
 					rawMetricDesc = append(rawMetricDesc, "NA_"+strconv.Itoa(k))
 				}
@@ -114,28 +115,28 @@ func buildMetrics() {
 		}
 	}
 
-	if cnf.SingleMetric {
-		fullName := cnf.MetricNamePrefix
+	if cnf.Cnf.SingleMetric {
+		fullName := cnf.Cnf.MetricNamePrefix
 
 		itemsMetric = prometheus.NewGaugeVec(prometheus.GaugeOpts{
-			Namespace: cnf.MetricNamespace,
-			Subsystem: cnf.MetricSubsystem,
+			Namespace: cnf.Cnf.MetricNamespace,
+			Subsystem: cnf.Cnf.MetricSubsystem,
 			Name:      fullName,
-			Help:      cnf.SingleMetricHelp,
+			Help:      cnf.Cnf.SingleMetricHelp,
 		}, labelsSlicePrometheus)
 
 		registerMetric(itemsMetric)
 	} else {
 		for k, name := range uniqMetricNames {
 			//clean up metric name
-			fullName := cnf.MetricNamePrefix
-			if cnf.MetricNameField != "" {
-				fullName = cnf.MetricNamePrefix + "_" + name
+			fullName := cnf.Cnf.MetricNamePrefix
+			if cnf.Cnf.MetricNameField != "" {
+				fullName = cnf.Cnf.MetricNamePrefix + "_" + name
 			}
 
 			itemsMetric = prometheus.NewGaugeVec(prometheus.GaugeOpts{
-				Namespace: cnf.MetricNamespace,
-				Subsystem: cnf.MetricSubsystem,
+				Namespace: cnf.Cnf.MetricNamespace,
+				Subsystem: cnf.Cnf.MetricSubsystem,
 				Name:      fullName,
 				Help:      uniqMetricDesc[k],
 			}, labelsSlicePrometheus)
@@ -149,7 +150,7 @@ func buildMetrics() {
 	}
 
 	log.Print("Number of bject getting from Zabbix    : ", len(results))
-	if cnf.SingleMetric {
+	if cnf.Cnf.SingleMetric {
 		log.Print("Number of metrics that will be produced: ", 1)
 	} else {
 		log.Print("Number of metrics that will be produced: ", len(metricsMap))
@@ -215,14 +216,14 @@ func RecordMetrics() {
 
 				var f float64
 				f = float64(0)
-				if result[cnf.MetricValue] != nil {
-					f, _ = strconv.ParseFloat(result[cnf.MetricValue].(string), 64)
+				if result[cnf.Cnf.MetricValue] != nil {
+					f, _ = strconv.ParseFloat(result[cnf.Cnf.MetricValue].(string), 64)
 				}
 
-				if cnf.SingleMetric {
+				if cnf.Cnf.SingleMetric {
 					itemsMetric.With(labelsWithValues).Set(f)
 				} else {
-					cleanName := cleanUpName(result[cnf.MetricNameField].(string))
+					cleanName := cleanUpName(result[cnf.Cnf.MetricNameField].(string))
 					metricsMap[cleanName].With(labelsWithValues).Set(f)
 				}
 			}
