@@ -32,7 +32,7 @@ var Cnf Config
 func loadConfig(path string) (config Config, err error) {
 	viper.AddConfigPath(path)
 	viper.SetConfigName("zabbix-exporter-config")
-	viper.SetConfigType("env")
+	viper.SetConfigType("yaml")
 	viper.AutomaticEnv()
 
 	err = viper.ReadInConfig()
@@ -47,7 +47,7 @@ func loadConfig(path string) (config Config, err error) {
 func init(){
 	fmt.Println(Cnf)
 	var err error
-	Cnf, err = loadConfig("./config/")
+	Cnf, err = loadConfig("./")
 	if err != nil {
 		log.Fatal("cannot load config:", err)
 	}

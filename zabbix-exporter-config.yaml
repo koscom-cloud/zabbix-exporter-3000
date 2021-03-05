@@ -1,0 +1,33 @@
+# ZABBIX_API_ENDPOINT: http://10.33.116.200/zabbix/api_jsonrpc.php
+ZABBIX_API_ENDPOINT: http://localhost/api_jsonrpc.php
+ZABBIX_USER: Admin
+ZABBIX_PASSWORD: zabbix
+ZABBIX_SKIP_SSL: true
+ZE3000_STRICT_METRIC_REG: false
+ZE3000_SINGLE_METRIC: false
+ZE3000_SINGLE_METRIC_HELP: single description
+# ZE3000_SINGLE_METRIC_NAME: true
+ZE3000_HOST_PORT: 0.0.0.0:9225
+ZE3000_METRIC_NAMESPACE: kos
+ZE3000_METRIC_SUBSYSTEM:
+ZE3000_METRIC_NAME_PREFIX: govcloud
+ZE3000_METRIC_NAME_FIELD: "key_"
+ZE3000_METRIC_VALUE: lastvalue
+ZE3000_METRIC_HELP: description
+ZE3000_METRIC_URI_PATH: /metrics
+ZE3000_ZABBIX_REFRESH_DELAY_SEC: 10
+ZE3000_ZABBIX_METRIC_LABELS: "name,itemid,key_,hosts>host,hosts>name,interfaces>ip,interface>dns"
+ZE3000_ZABBIX_QUERY: |-
+  {
+    "jsonrpc": "2.0",  
+    "method": "item.get",  
+    "params":{    
+      "output": ["itemid","key_","lastvalue"],    
+      "selectDependencies": "extend",    
+      "selectHosts": ["name","status","host"],    
+      "selectInterfaces": ["ip","dns"],    
+      "sortfield":"key_"  
+      },  
+    "auth": "%auth-token%",  
+    "id": 1
+  }

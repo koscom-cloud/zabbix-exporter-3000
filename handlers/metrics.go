@@ -149,7 +149,7 @@ func buildMetrics() {
 		}
 	}
 
-	log.Print("Number of bject getting from Zabbix    : ", len(results))
+	log.Print("Number of object getting from Zabbix    : ", len(results))
 	if cnf.Cnf.SingleMetric {
 		log.Print("Number of metrics that will be produced: ", 1)
 	} else {
