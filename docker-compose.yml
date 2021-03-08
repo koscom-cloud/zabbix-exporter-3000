@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  ze_computehosts:
+    container_name: ze_computehosts
+    image: docker.pkg.github.com/koscom-cloud/zabbix-exporter-3000/zabbix-exporter-3000
+    environment:
+      - ZABBIX_EXPORTER_CONFIG_PATH=/app/config-files/
+    volumes:
+      - ./config-files/:/app/config-files/
+    command:
+      # - "sed -i 's/__GROUP_NAME__/Compute/g' /app/config-files/zabbix-exporter-config.yaml"
+      - "/app/ze3000"
+    ports:
+      - 9226:9226
+    restart: always

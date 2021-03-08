@@ -1,0 +1,11 @@
+# zabbix
+zabbix_session
+zabbix-exporter
+
+# git
+.gitignore
+.gitattributes
+
+# project
+LICENSE
+Dockerfile*
